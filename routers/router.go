@@ -1,6 +1,9 @@
 package routers
 
-import "github.com/gin-gonic/gin"
+import (
+	v1 "github.com/Mitotow/scgm-api/routers/api/v1"
+	"github.com/gin-gonic/gin"
+)
 
 func CreateRouter() *gin.Engine {
 	r := gin.New()
@@ -11,7 +14,7 @@ func CreateRouter() *gin.Engine {
 
 	// TODO: Add group.use() for jwt middleware
 
-	locationsGroup.GET("/")
+	locationsGroup.GET("", v1.GetLocations)
 
 	return r
 }

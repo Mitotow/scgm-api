@@ -32,8 +32,8 @@ func (r LocationsRepositoryImpl) FindAll() []models.Location {
 
 func (r LocationsRepositoryImpl) FindByName(name string) (models.Location, error) {
 	var location models.Location
-	res := r.Db.Find(&location, &name)
-	if res.Error != nil {
+
+	if err := r.Db.Where("name=?", name).First(&location).Error; err != nil {
 		return location, errors.New("location not found")
 	}
 

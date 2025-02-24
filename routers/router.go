@@ -15,6 +15,7 @@ func CreateRouter() *gin.Engine {
 	// TODO: Add group.use() for jwt middleware
 
 	locationsGroup.GET("", v1.GetLocations)
+	locationsGroup.GET("/:name", v1.GetLocationByName)
 
 	return r
 }

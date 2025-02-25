@@ -4,11 +4,10 @@ import (
 	"errors"
 	"github.com/Mitotow/scgm-api/models"
 	"gorm.io/gorm"
-	"log"
 )
 
 type LocationsRepository interface {
-	FindAll() []models.Location
+	FindAll() ([]models.Location, error)
 	FindByName(name string) (models.Location, error)
 }
 
@@ -20,14 +19,11 @@ func NewLocationsRepositoryImpl(Db *gorm.DB) LocationsRepository {
 	return &LocationsRepositoryImpl{Db: Db}
 }
 
-func (r LocationsRepositoryImpl) FindAll() []models.Location {
+func (r LocationsRepositoryImpl) FindAll() ([]models.Location, error) {
 	var locations []models.Location
 	res := r.Db.Find(&locations)
-	if res.Error != nil {
-		log.Fatal(res.Error)
-	}
 
-	return locations
+	return locations, res.Error
 }
 
 func (r LocationsRepositoryImpl) FindByName(name string) (models.Location, error) {

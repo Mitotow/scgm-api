@@ -1,5 +1,16 @@
 package models
 
+type LocationResponse struct {
+	Status   int      `json:"status"`
+	Location Location `json:"location"`
+}
+
+type LocationsResponse struct {
+	Status    int        `json:"status"`
+	Total     int        `json:"total"`
+	Locations []Location `json:"locations"`
+}
+
 type Location struct {
 	Name   string `gorm:"type:varchar(255);primary_key" json:"name"`
 	System string `gorm:"type:varchar(255)" json:"system"`

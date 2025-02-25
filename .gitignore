@@ -1,0 +1,6 @@
+# Directories
+.idea
+out
+
+# Files
+.env

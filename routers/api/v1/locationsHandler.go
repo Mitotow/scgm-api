@@ -5,6 +5,7 @@ import (
 	"github.com/Mitotow/scgm-api/repositories"
 	"github.com/Mitotow/scgm-api/services"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 var locationRepository = repositories.NewLocationsRepositoryImpl(config.DatabaseConnection())
@@ -17,7 +18,16 @@ var locationRepository = repositories.NewLocationsRepositoryImpl(config.Database
 // @Failure 500 {object} gin.H "Returns a JSON object with an error message"
 // @Router /api/v1/locations [get]
 func GetLocations(c *gin.Context, service services.LocationsService) {
-	response, err := service.FindAll()
+	var page int
+	query, exists := c.GetQuery("page")
+	queryAsInt, parseError := strconv.ParseInt(query, 10, 32)
+	if !exists || parseError != nil || queryAsInt <= 0 {
+		page = 1
+	} else {
+		page = int(queryAsInt)
+	}
+
+	response, err := service.FindAll(page)
 	if err != nil {
 		c.JSON(err.Status, err)
 		return

@@ -7,7 +7,7 @@ import (
 )
 
 type LocationsRepository interface {
-	FindAll() ([]models.Location, error)
+	FindAll(skip int, take int) ([]models.Location, int64, error)
 	FindByName(name string) (models.Location, error)
 }
 
@@ -19,11 +19,21 @@ func NewLocationsRepositoryImpl(Db *gorm.DB) LocationsRepository {
 	return &LocationsRepositoryImpl{Db: Db}
 }
 
-func (r LocationsRepositoryImpl) FindAll() ([]models.Location, error) {
+func (r LocationsRepositoryImpl) FindAll(skip int, take int) ([]models.Location, int64, error) {
 	var locations []models.Location
-	res := r.Db.Find(&locations)
+	var total int64
 
-	return locations, res.Error
+	res := r.Db.Model(&models.Location{}).Count(&total)
+	if res.Error != nil {
+		return nil, 0, res.Error
+	}
+
+	res = r.Db.Offset(skip).Limit(take).Find(&locations)
+	if res.Error != nil {
+		return nil, 0, res.Error
+	}
+
+	return locations, total, nil
 }
 
 func (r LocationsRepositoryImpl) FindByName(name string) (models.Location, error) {

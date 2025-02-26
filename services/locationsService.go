@@ -1,26 +1,28 @@
 package services
 
 import (
+	"github.com/Mitotow/scgm-api/config"
 	"github.com/Mitotow/scgm-api/models"
 	"github.com/Mitotow/scgm-api/repositories"
 	"net/http"
 )
 
 type LocationsService interface {
-	FindAll() (*models.LocationsResponse, *models.ErrorResponse)
+	FindAll(page int) (*models.LocationsResponse, *models.ErrorResponse)
 	FindByName(name string) (*models.LocationResponse, *models.ErrorResponse)
 }
 
 type LocationsServiceImpl struct {
 	LocationsRepository repositories.LocationsRepository
+	env                 *config.EnvironmentVariables
 }
 
 func NewLocationsService(repository repositories.LocationsRepository) LocationsService {
-	return &LocationsServiceImpl{LocationsRepository: repository}
+	return &LocationsServiceImpl{LocationsRepository: repository, env: config.GetEnv()}
 }
 
-func (s LocationsServiceImpl) FindAll() (*models.LocationsResponse, *models.ErrorResponse) {
-	locations, err := s.LocationsRepository.FindAll()
+func (s LocationsServiceImpl) FindAll(page int) (*models.LocationsResponse, *models.ErrorResponse) {
+	locations, total, err := s.LocationsRepository.FindAll(s.env.LocationsPerPage*(page-1), s.env.LocationsPerPage)
 	if err != nil {
 		return nil, &models.ErrorResponse{
 			Status: http.StatusInternalServerError,
@@ -29,9 +31,11 @@ func (s LocationsServiceImpl) FindAll() (*models.LocationsResponse, *models.Erro
 	}
 
 	return &models.LocationsResponse{
-		Status:    http.StatusOK,
-		Total:     len(locations),
-		Locations: locations,
+		Status:     http.StatusOK,
+		Page:       page,
+		MaxPerPage: s.env.LocationsPerPage,
+		Total:      total,
+		Locations:  locations,
 	}, nil
 }
 

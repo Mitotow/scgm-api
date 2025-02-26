@@ -6,9 +6,11 @@ type LocationResponse struct {
 }
 
 type LocationsResponse struct {
-	Status    int        `json:"status"`
-	Total     int        `json:"total"`
-	Locations []Location `json:"locations"`
+	Status     int        `json:"status"`
+	Page       int        `json:"page"`
+	MaxPerPage int        `json:"maxPerPage"`
+	Total      int64      `json:"total"`
+	Locations  []Location `json:"locations"`
 }
 
 type Location struct {

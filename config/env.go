@@ -7,12 +7,13 @@ import (
 )
 
 type EnvironmentVariables struct {
-	AppPort    string `envconfig:"APP_PORT" default:"8080"`
-	DBHost     string `envconfig:"DB_HOST" required:"true"`
-	DBPort     int    `envconfig:"DB_PORT" default:"5432"`
-	DBUser     string `envconfig:"DB_USERNAME" required:"true"`
-	DBPassword string `envconfig:"DB_PASSWORD" required:"true"`
-	DBName     string `envconfig:"DB_NAME" required:"true"`
+	AppPort          string `envconfig:"APP_PORT" default:"8080"`
+	DBHost           string `envconfig:"DB_HOST" required:"true"`
+	DBPort           int    `envconfig:"DB_PORT" default:"5432"`
+	DBUser           string `envconfig:"DB_USERNAME" required:"true"`
+	DBPassword       string `envconfig:"DB_PASSWORD" required:"true"`
+	DBName           string `envconfig:"DB_NAME" required:"true"`
+	LocationsPerPage int    `envconfig:"LOCATIONS_PER_PAGE" default:"50"`
 }
 
 var variables EnvironmentVariables

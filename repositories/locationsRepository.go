@@ -40,7 +40,7 @@ func (r LocationsRepositoryImpl) FindByName(name string) (models.Location, error
 	var location models.Location
 
 	if err := r.Db.Where("name=?", name).First(&location).Error; err != nil {
-		return location, errors.New("location not found")
+		return location, errors.ErrUnsupported
 	}
 
 	return location, nil

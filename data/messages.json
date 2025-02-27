@@ -1,0 +1,5 @@
+{
+  "INTERNAL_SERVER_ERROR": "Internal Server Error",
+  "BAD_LOCATION_NAME": "Location with name %s not found",
+  "INVALID_DISCORD_CODE": "Invalid code"
+}

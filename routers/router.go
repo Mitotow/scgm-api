@@ -19,7 +19,6 @@ func CreateRouter() *gin.Engine {
 	locationRepository := repositories.NewLocationsRepositoryImpl(db)
 	locationsService := services.NewLocationsService(locationRepository)
 	locationsGroup := apiV1group.Group("/locations")
-	// TODO: Add group.use() for jwt middleware
 	locationsGroup.GET("", func(c *gin.Context) { v1.GetLocations(c, locationsService) })
 	locationsGroup.GET("/:name", func(c *gin.Context) { v1.GetLocationByName(c, locationsService) })
 
@@ -27,6 +26,11 @@ func CreateRouter() *gin.Engine {
 	locationsGroup.POST("", func(c *gin.Context) {})
 	locationsGroup.PUT("", func(c *gin.Context) {})
 	locationsGroup.DELETE("", func(c *gin.Context) {})
+
+	authGroup := apiV1group.Group("/auth")
+	authService := services.NewAuthService()
+	authGroup.GET("/login", func(c *gin.Context) { v1.Login(c, authService) })
+	authGroup.GET("/callback", func(c *gin.Context) { v1.Callback(c, authService) })
 
 	// Missions routes
 	missionsGroup := apiV1group.Group("/missions")
